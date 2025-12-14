@@ -12,6 +12,7 @@
  *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied. 
  * 
+ * 1.1.1 - Moved Repor for better Forking and updated Links
  * 1.1.0 - Initial Working Version
 */
 import groovy.json.JsonSlurper
@@ -19,7 +20,7 @@ import groovy.json.JsonOutput
 import java.net.URLEncoder
 import groovy.transform.Field
 
-private def get_APP_VERSION() {return "1.1.0"}
+private def get_APP_VERSION() {return "1.1.1"}
 private def copyright() {return "<br>© 2025-" + new Date().format("yyyy") + " Albert Mulder. All rights reserved."}
 private def get_APP_NAME() {return "YoLink™ Device Local Service"}
 
@@ -34,7 +35,7 @@ definition(
     singleInstance: true,
     iconUrl: "${getImagePath()}yolink.png",
     iconX2Url: "${getImagePath()}yolink.png",
-    importUrl: "https://github.com/almulder/yolink/edit/main/YoLink_Device_Service.groovy"
+    importUrl: "https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/YoLink_Device_Service.groovy"
 )
 
 preferences {
@@ -95,32 +96,32 @@ def credentials() {
                 paragraph "<u><b style='font-size: 24px;'>Obtaining Your User Credentials</b></u>"
                 paragraph ""
                 paragraph "<b>◉</b>  Please open your YoLink™ mobile app, navigate to the <b>YoLink™ Local Hub (3)</b>. Note: (1) Shows device is online. (2) Shows device is linked to Local Hub."
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/devices.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/devices.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
                 paragraph "<b>◉</b>  Click on the 3 dots (1) in the top right corner."
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/hub.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/hub.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
                 paragraph "<b>◉  Locate your IP address:</b> (Hard wired preferred), but you can use either one; just be sure you reserve the IP address in your router as this requires a static IP. (Refer to router manual for help with reserving ip address)"
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/details.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/details.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
                 paragraph "<b>◉</b>  Go back to the hub page and click on <b>Local Network (2)</b>."
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/hub.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/hub.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
                 paragraph "<b>◉  Locate your Net ID (1)</b>"
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/local_network.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/local_network.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
                 paragraph "<b>◉  Client ID & Client Secret:</b> Go to the Integrations tab and locate the Client ID and Client Secret."
-                paragraph "<img src='https://raw.githubusercontent.com/almulder/hubitat/refs/heads/main/YoLink/Pics/local_api.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
+                paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/local_api.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
                 paragraph ""
@@ -640,7 +641,7 @@ private def tokenURL() {return "http://${settings.localHubIP}:1080/open/yolink/t
 private def getStandardImagePath() {return "http://cdn.device-icons.smartthings.com/"}
 private int SUCCESS() {return 200}
 private int UNAUTHORIZED() {return 401}
-private def getImagePath() {return "https://raw.githubusercontent.com/almulder/yolink/main/icons/"}   
+private def getImagePath() {return "https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/icons/"}   
 
 def AuthToken() {state.access_token}  
 
@@ -1240,4 +1241,3 @@ Boolean writeFile(String fName, String fData) {
     }
     return ok
 }
-
