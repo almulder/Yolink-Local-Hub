@@ -1,8 +1,8 @@
 /**
- *  YoLink™ Device Local Service (Local API Edition)
+ *  YoLink Device Local Service (Local API Edition)
  *  © 2025 Albert Mulder. All rights reserved.
  *  
- *  THIS SOFTWARE IS NEITHER DEVELOPED, ENDORSED, OR ASSOCIATED WITH YoLink™ OR YoSmart, Inc.
+ *  THIS SOFTWARE IS NEITHER DEVELOPED, ENDORSED, OR ASSOCIATED WITH YoLink OR YoSmart, Inc.
  *  
  *  Developer retains all rights, title, copyright, and interest, including patent rights and trade
  *  secrets in this software. Developer grants a non-exclusive perpetual license (License) to User to use
@@ -12,7 +12,8 @@
  *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied. 
  * 
- * 1.1.1 - Moved Repor for better Forking and updated Links
+ * 1.2.0 - Support for Motion Devices
+ * 1.1.1 - Moved Repo for better Forking and updated Links
  * 1.1.0 - Initial Working Version
 */
 import groovy.json.JsonSlurper
@@ -20,16 +21,16 @@ import groovy.json.JsonOutput
 import java.net.URLEncoder
 import groovy.transform.Field
 
-private def get_APP_VERSION() {return "1.1.1"}
+private def get_APP_VERSION() {return "1.2.0"}
 private def copyright() {return "<br>© 2025-" + new Date().format("yyyy") + " Albert Mulder. All rights reserved."}
-private def get_APP_NAME() {return "YoLink™ Device Local Service"}
+private def get_APP_NAME() {return "YoLink Device Local Service"}
 
 
 definition(
-    name: "YoLink™ Device Local Service",
+    name: "YoLink Device Local Service",
     namespace: "almulder",
     author: "Albert Mulder",
-    description: "Connects your YoLink™ devices to Hubitat.",
+    description: "Connects your YoLink devices to Hubitat.",
     oauth: false,    
     category: "YoLink",
     singleInstance: true,
@@ -40,10 +41,10 @@ definition(
 
 preferences {
     page(name: "about", title: "About", nextPage: "credentials") 
-    page(name: "credentials", title: "YoLink™ App User Access Credentials", content:"credentials", nextPage:"otherSettings")
+    page(name: "credentials", title: "YoLink App User Access Credentials", content:"credentials", nextPage:"otherSettings")
     page(name: "otherSettings", title: "Other Settings", content:"otherSettings", nextPage: "deviceList")
-    page(name: "deviceList",title: "YoLink™ Devices", content:"deviceList",nextPage: "diagnostics")  
-    page(name: "diagnostics", title: "YoLink™  Device Service and Driver Diagnostics", content:"diagnostics", nextPage: "finish")
+    page(name: "deviceList",title: "YoLink Devices", content:"deviceList",nextPage: "diagnostics")  
+    page(name: "diagnostics", title: "YoLink  Device Service and Driver Diagnostics", content:"diagnostics", nextPage: "finish")
     page(name: "finish", title: "Installation Complete", content:"finish", uninstall: false)
 }
 
@@ -57,18 +58,18 @@ def about() {
     dynamicPage(name: "about", title: pageTitle("About"), uninstall: true) {
         section("") {
             paragraph image:"${getImagePath()}yolink.png", boldTitle("${get_APP_NAME()} - Version ${get_APP_VERSION()}")
-            paragraph boldTitle("This app connects your YoLink™ devices to Hubitat via MQTT & the YoLink™ Local Hub.")  
-            paragraph blueTitle("The app is neither developed, endorsed, or associated with YoLink™ or YoSmart, Inc." + 
+            paragraph boldTitle("This app connects your YoLink devices to Hubitat via MQTT & the YoLink Local Hub.")  
+            paragraph blueTitle("The app is neither developed, endorsed, or associated with YoLink or YoSmart, Inc." + 
             "</br>Provided 'AS IS', without warranties or conditions of any kind, either expressed or implied.") 
             paragraph boldTitle ("")
             paragraph boldTitle ("")               
             paragraph ""                
-            paragraph "     I want to give a huge thank you to <b>Steven Barcus</b> for his incredible work on the Cloud version. This app and these drivers simply wouldn’t exist without the foundation he built. In fact, <b>Steven Barcus</b> is the reason I first became involved in the Yolink™ ecosystem."
+            paragraph "     I want to give a huge thank you to <b>Steven Barcus</b> for his incredible work on the Cloud version. This app and these drivers simply wouldn’t exist without the foundation he built. In fact, <b>Steven Barcus</b> is the reason I first became involved in the Yolink ecosystem."
  			paragraph ""    
 			paragraph "     I created these drivers and the app for the local hub out of necessity—since no one else was developing local API drivers for the new hub. With the help of AI, I was able to bring them to life, but it all started with the groundwork that <b>Steven Barcus</b> had already laid."
             paragraph boldTitle (copyright())  
             paragraph ""     
-            paragraph boldRedTitle ("WARNING: Removing this application will delete all the Yolink™ devices in Hubitat that were created by this app!")
+            paragraph boldRedTitle ("WARNING: Removing this application will delete all the Yolink devices in Hubitat that were created by this app!")
         }
         section("") {          
             input "debugging", "enum", title:boldTitle("Enable Debugging"), required: true, options:["True","False"],defaultValue: "False"  
@@ -78,11 +79,11 @@ def about() {
 
 def credentials() {
     state.authError = null
-    dynamicPage(name: "credentials", title: pageTitle("YoLink™ Access Credentials"), uninstall: false) {
+    dynamicPage(name: "credentials", title: pageTitle("YoLink Access Credentials"), uninstall: false) {
         section("") {
-            paragraph "<b>This app assumes you have your YoLink™ Local Hub set up and running with devices connected to it, along with the Local API running. If you need help with this, please refer back to YoLink™ for directions.</b>"
+            paragraph "<b>This app assumes you have your YoLink Local Hub set up and running with devices connected to it, along with the Local API running. If you need help with this, please refer back to YoLink for directions.</b>"
           }    
-        section(sectionTitle("User Access Credentials from the YoLink™ mobile app")) {
+        section(sectionTitle("User Access Credentials from the YoLink mobile app")) {
             input "localHubIP", "string", title: boldTitle("Local Hub IP Address:"), required: true
             input "subnetId", "string", title: boldTitle("Net ID:"), required: true
             input "Client_ID", "text", title: boldTitle("Client ID:"), required: true    
@@ -95,7 +96,7 @@ def credentials() {
                 paragraph ""                         
                 paragraph "<u><b style='font-size: 24px;'>Obtaining Your User Credentials</b></u>"
                 paragraph ""
-                paragraph "<b>◉</b>  Please open your YoLink™ mobile app, navigate to the <b>YoLink™ Local Hub (3)</b>. Note: (1) Shows device is online. (2) Shows device is linked to Local Hub."
+                paragraph "<b>◉</b>  Please open your YoLink mobile app, navigate to the <b>YoLink Local Hub (3)</b>. Note: (1) Shows device is online. (2) Shows device is linked to Local Hub."
                 paragraph "<img src='https://raw.githubusercontent.com/almulder/Yolink-Local-Hub/main/Pics/devices.png' alt='YoLink devices' style='max-width: 50%; height: auto; border: 2px solid gray; box-shadow: 4px 4px 6px rgba(0,0,0,0.5);'/>"
                 paragraph ""
                 paragraph ""
@@ -292,7 +293,7 @@ def diagnostics() {
 
     // --- Return a page (no inputs) so preferences content:'diagnostics' is satisfied ---
     return dynamicPage(name: "diagnostics",
-                       title: pageTitle("YoLink™ Diagnostics"),
+                       title: pageTitle("YoLink Diagnostics"),
                        uninstall: false,
                        nextPage: "finish") {
         section("") {
@@ -392,13 +393,31 @@ String getDateTimeFormat() {
 private create_yolink_device(Hubitat_dni, devname, devtype, devtoken, devId) {
     // --- driver name resolution ---
     def drivername = devtype
-    if (devtype == "THSensor")       drivername = "THSensor" //getTHSensorDriver(devname, devtype, devtoken, devId)
-    if (devtype == "LeakSensor")     drivername = "LeakSensor"
-    //if (devtype == "MultiOutlet")    drivername = getMultiOutletDriver(devname, devtype, devtoken, devId)
+        if (devtype == "COSmokeSensor") drivername = "COSmokeSensor"
+    if (devtype == "Dimmer") drivername = "Dimmer"
+    if (devtype == "DoorSensor") drivername = "DoorSensor"
+    if (devtype == "Finger") drivername = "Finger"
+    if (devtype == "GarageDoor") drivername = "GarageDoor"
+    if (devtype == "LeakSensor") drivername = "LeakSensor"
+    if (devtype == "LeakSensor3") drivername = "LeakSensor3"
+    if (devtype == "Lock") drivername = "Lock"
+    if (devtype == "Manipulator") drivername = "Manipulator"
+    if (devtype == "MotionSensor") drivername = "MotionSensor"
+    if (devtype == "MultiOutlet") drivername = "MultiOutlet"
+    if (devtype == "Outlet") drivername = "Outlet"
     if (devtype == "PowerFailureAlarm") drivername = "PowerFailureAlarm"
-    //if (devtype == "Hub")            drivername = "Hub"
-
-    drivername = getYoLinkDriverName(drivername)
+    if (devtype == "Siren") drivername = "Siren"
+    if (devtype == "SmartOutdoorPlug") drivername = "SmartOutdoorPlug"
+    if (devtype == "SmartRemoter") drivername = "SmartRemoter"
+    if (devtype == "Sprinkler") drivername = "Sprinkler"
+    if (devtype == "Switch") drivername = "Switch"
+    if (devtype == "THSensor") drivername = "THSensor"
+    if (devtype == "TemperatureSensor") drivername = "TemperatureSensor"
+    if (devtype == "Thermostat") drivername = "Thermostat"
+    if (devtype == "VibrationSensor") drivername = "VibrationSensor"
+    if (devtype == "WaterDepthSensor") drivername = "WaterDepthSensor"
+    if (devtype == "WaterMeterController") drivername = "WaterMeterController"
+drivername = getYoLinkDriverName(drivername)
     if (!drivername.endsWith("Local")) drivername += " Local"
 
     // desired child DNI is the raw YoLink deviceId
@@ -469,7 +488,7 @@ def getDeviceToken(dni) {
     log.info "Polling Local API to retrieve device tokens..."   
     
     try {         
-        def object = pollAPI(body,"YoLink™ Device Local Service","App")
+        def object = pollAPI(body,"YoLink Device Local Service","App")
          
         if (object) {
             def responseValues=[]              
@@ -1109,7 +1128,7 @@ def getTHSensorDriver(name, type, token, devId) {
     return driver   // Always return "THSensor"!
 }
 
-// Devices YoLink™ LeakSensor (YS7903-UC) and YoLink™ LeakSensor3 (YS7904-UC) are both reported as "LeakSensor"
+// Devices YoLink LeakSensor (YS7903-UC) and YoLink LeakSensor3 (YS7904-UC) are both reported as "LeakSensor"
 // If the device doesn't support 'supportChangeMode' then it's a YS7903-UC
 def getLeakSensorDriver(name,type,token,devId) {
     def driver = "LeakSensor"
@@ -1149,7 +1168,7 @@ def getLeakSensorDriver(name,type,token,devId) {
     return driver
 }  
 
-// YoLink™ MultiOutlet (YS6801-UC) and Smart Outdoor Plug (YS6802-UC/SH-18A) are both reported as "MultiOutlet"
+// YoLink MultiOutlet (YS6801-UC) and Smart Outdoor Plug (YS6802-UC/SH-18A) are both reported as "MultiOutlet"
 // If device only returns delays on 2 channels (0 and 1), assume it's a Smart Outdoor Plug 
 def getMultiOutletDriver(name,type,token,devId) {
     def driver = "MultiOutlet"
