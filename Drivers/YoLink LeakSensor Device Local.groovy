@@ -2,12 +2,13 @@
  *  YoLink™ Leak Sensor (Local API Edition)
  *  © 2025 Albert Mulder
  *
+ *  1.1.2 - Updated fro HPM
  *  1.1.1 - Harden the beginning of processStateData(String payload) to coerce/guard data and loraInfo before dereferencing.
  *  1.1.0 - Initial working driver
  */
 import groovy.json.JsonSlurper
 
-def clientVersion() { "1.1.1-LS-local" }
+def clientVersion() { "1.1.2" }
 def copyright()     { "© 2025 Albert Mulder" }
 def driverName()    { "YoLink™ Leak Sensor (Local API Edition)" }
 
