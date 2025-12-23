@@ -2,18 +2,17 @@
  *  YoLink MotionSensor Device (Local API Edition)
  *  © 2025 Albert Mulder
  *
- *  Rebuilt to match Albert's Local driver style (THSensor Local pattern)
- *  - Hardened processStateData(payload) (guard data/lora before deref)
- *  - Temperature handling mirrors THSensor Local (state.temperature -> parent.convertTemperature)
- *  - Adds a safe normalization for MotionSensor temperature payloads that appear offset
- *    (some Local Hub motion payloads report Fahrenheit as F-136; e.g., -57 -> 79F)
+ *  
+ *  1.1.2 - Updated for HPM
+ *  1.1.1 - Harden the beginning of processStateData(String payload) to coerce/guard data and loraInfo before dereferencing.
+ *  1.1.0 - Initial working driver
  */
 
 import groovy.json.JsonSlurper
 
-def clientVersion() { return "1.0.0-MOT-local" }
+def clientVersion() { return "1.1.2" }
 def copyright()     { return "© 2025 Albert Mulder" }
-def driverName()    { return "YoLink MotionSensor (Local API Edition)" }
+def driverName()    { return "YoLink™ MotionSensor (Local API Edition)" }
 
 /* ============================ Preferences ============================ */
 preferences {
