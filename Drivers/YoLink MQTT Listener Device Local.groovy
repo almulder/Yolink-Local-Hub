@@ -2,12 +2,13 @@
  *  YoLink™ MQTT Listener (Local API Edition)
  *  © 2025 Albert Mulder
  *
+ *  1.1.1 - Updated for HPM
  *  1.1.0 - Initial working driver
  */
 
 import groovy.json.JsonSlurper
 
-def clientVersion() { "1.1.0-MQTT-local" }
+def clientVersion() { "1.1.1" }
 def copyright()     { "© 2025 Albert Mulder" }
 def driverName()    { "YoLink™ MQTT Listener (Local API Edition)" }
 
