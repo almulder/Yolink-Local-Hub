@@ -2,13 +2,14 @@
  *  YoLink™ THSensor Device (Local API Edition)
  *  © 2025 Albert Mulder
  *
+ *  1.1.2 - Updated for HPM
  *  1.1.1 - Harden the beginning of processStateData(String payload) to coerce/guard data and loraInfo before dereferencing.
  *  1.1.0 - Initial working driver
  */
 
 import groovy.json.JsonSlurper
 
-def clientVersion() { return "1.1.1-THS-local" }
+def clientVersion() { return "1.1.2" }
 def copyright()     { return "© 2025 Albert Mulder" }
 def bold(t)         { return "<strong>$t</strong>" }
 def driverName()    { return "YoLink™ THSensor (Local API Edition)"}
